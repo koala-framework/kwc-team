@@ -1,0 +1,17 @@
+{
+    "name": "koala-framework/kwc-team",
+    "description": "Team Component for Koala Framework",
+    "homepage": "http://www.koala-framework.org/",
+    "license": "BSD-2-Clause",
+    "type": "library",
+    "require": {
+        "koala-framework/koala-framework": "~4.2"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-0": {
+            "Team_": ""
+        }
+    }
+}
