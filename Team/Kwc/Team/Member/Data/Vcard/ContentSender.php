@@ -59,8 +59,7 @@ class Team_Kwc_Team_Member_Data_Vcard_ContentSender extends Kwf_Component_Abstra
     {
         $defaults = $this->_getDefaultValues();
 
-        require_once Kwf_Config::getValue('externLibraryPath.pearContactVcardBuild').'/Contact/Vcard/Build.php';
-        $vcard = new Contact_Vcard_Build('2.1');
+        $vcard = new Team_Kwc_Team_Member_Data_Vcard_Pear_Build('2.1');
 
         $vcard->setName(utf8_decode($dataRow->lastname), utf8_decode($dataRow->firstname), '',
             utf8_decode($dataRow->title), '');
