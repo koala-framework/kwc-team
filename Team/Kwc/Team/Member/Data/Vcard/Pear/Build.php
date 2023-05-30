@@ -399,7 +399,12 @@ class Team_Kwc_Team_Member_Data_Vcard_Pear_Build extends Team_Kwc_Team_Member_Da
                     $result = true;
                 }
                 break;
-        
+
+            case 'CHARSET':
+                // all charsets are OK
+                $result = true;
+                break;
+
             case 'VALUE':
                 if ($text != 'BINARY' &&
                     $text != 'PHONE-NUMBER' &&
@@ -1954,7 +1959,7 @@ class Team_Kwc_Team_Member_Data_Vcard_Pear_Build extends Team_Kwc_Team_Member_Da
         // fold lines at 75 characters
         $regex = "(.{1,75})";
         foreach ($lines as $key => $val) {
-            if (strlen($val) > 75) {
+            if (strlen($val) > 75 && strpos($val, "PHOTO") !== 0) {
                 // we trim to drop the last newline, which will be added
                 // again by the implode function at the end of fetch()
                 $lines[$key] = (preg_replace("/$regex/i", "\\1$newline ", $val));

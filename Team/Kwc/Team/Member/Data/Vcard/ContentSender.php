@@ -35,7 +35,7 @@ class Team_Kwc_Team_Member_Data_Vcard_ContentSender extends Kwf_Component_Abstra
         $filename = $this->_getFilename($dataRow);
 
         if (!$filename) $filename = 'vcard';
-        header('Content-Type: text/x-vcard; charset=us-ascii');
+        header('Content-Type: text/x-vcard; charset=UTF-8');
         header('Content-Length: '.strlen($content));
         header('Content-Disposition: attachment; filename="'.$filename.'.vcf"');
         echo $content;
@@ -58,34 +58,35 @@ class Team_Kwc_Team_Member_Data_Vcard_ContentSender extends Kwf_Component_Abstra
     protected function _getVcardContent($dataRow, $imageData)
     {
         $defaults = $this->_getDefaultValues();
+        $charset = "UTF-8";
+        $vcfCardVersion = '3.0';
 
-        $vcard = new Team_Kwc_Team_Member_Data_Vcard_Pear_Build('2.1');
+        $vcard = new Team_Kwc_Team_Member_Data_Vcard_Pear_Build($vcfCardVersion);
 
-        $vcard->setName(utf8_decode($dataRow->lastname), utf8_decode($dataRow->firstname), '',
-            utf8_decode($dataRow->title), '');
-        $vcard->addParam('CHARSET', 'ISO-8859-1');
+        $vcard->setName($dataRow->lastname, $dataRow->firstname, '', $dataRow->title, '');
+        $vcard->addParam('CHARSET', $charset);
 
-        $vcard->setFormattedName(utf8_decode($dataRow->firstname).' '.utf8_decode($dataRow->lastname));
-        $vcard->addParam('CHARSET', 'ISO-8859-1');
+        $vcard->setFormattedName($dataRow->firstname.' '.$dataRow->lastname);
+        $vcard->addParam('CHARSET', $charset);
 
         if (isset($defaults['ORG'])) {
-            $vcard->addOrganization(utf8_decode($defaults['ORG']));
-            $vcard->addParam('CHARSET', 'ISO-8859-1');
+            $vcard->addOrganization($defaults['ORG']);
+            $vcard->addParam('CHARSET', $charset);
         }
         if (!empty($dataRow->working_position)) {
-            $vcard->setRole(utf8_decode($dataRow->working_position));
-            $vcard->addParam('CHARSET', 'ISO-8859-1');
+            $vcard->setRole($dataRow->working_position);
+            $vcard->addParam('CHARSET', $charset);
         }
         if (!empty($dataRow->phone)) {
-            $vcard->addTelephone(utf8_decode($dataRow->phone));
+            $vcard->addTelephone($dataRow->phone);
             $vcard->addParam('TYPE', 'WORK');
             $vcard->addParam('TYPE', 'PREF');
-            $vcard->addParam('CHARSET', 'ISO-8859-1');
+            $vcard->addParam('CHARSET', $charset);
         }
         if (!empty($dataRow->mobile)) {
-            $vcard->addTelephone(utf8_decode($dataRow->mobile), 'mobile');
+            $vcard->addTelephone($dataRow->mobile, 'mobile');
             $vcard->addParam('TYPE', 'WORK');
-            $vcard->addParam('CHARSET', 'ISO-8859-1');
+            $vcard->addParam('CHARSET', $charset);
         }
         $fax = null;
         if (!empty($dataRow->fax)) {
@@ -94,23 +95,23 @@ class Team_Kwc_Team_Member_Data_Vcard_ContentSender extends Kwf_Component_Abstra
             $fax = $defaults['TEL;WORK;FAX'];
         }
         if ($fax) {
-            $vcard->addTelephone(utf8_decode($fax), 'fax');
+            $vcard->addTelephone($fax, 'fax');
             $vcard->addParam('TYPE', 'WORK');
-            $vcard->addParam('CHARSET', 'ISO-8859-1');
+            $vcard->addParam('CHARSET', $charset);
         }
         if (!empty($dataRow->email)) {
-            $vcard->addEmail(utf8_decode($dataRow->email));
+            $vcard->addEmail($dataRow->email);
             $vcard->addParam('TYPE', 'WORK');
-            $vcard->addParam('CHARSET', 'ISO-8859-1');
+            $vcard->addParam('CHARSET', $charset);
         }
         if (isset($defaults['URL;WORK'])) {
-            $vcard->setURL(utf8_decode($defaults['URL;WORK']));
+            $vcard->setURL($defaults['URL;WORK']);
             $vcard->addParam('TYPE', 'WORK');
-            $vcard->addParam('CHARSET', 'ISO-8859-1');
+            $vcard->addParam('CHARSET', $charset);
         }
         if (isset($defaults['NOTE'])) {
-            $vcard->setNote(utf8_decode($defaults['NOTE']));
-            $vcard->addParam('CHARSET', 'ISO-8859-1');
+            $vcard->setNote($defaults['NOTE']);
+            $vcard->addParam('CHARSET', $charset);
         }
         if (isset($defaults['ADR;WORK']) || !empty($dataRow->street) || !empty($dataRow->city) || !empty($dataRow->zip) || !empty($dataRow->country)) {
             /**
@@ -125,19 +126,19 @@ class Team_Kwc_Team_Member_Data_Vcard_ContentSender extends Kwf_Component_Abstra
              */
             $values = array();
             if (!empty($defaults['ADR;WORK'])) {
-                $values = explode(';', utf8_decode($defaults['ADR;WORK']));
+                $values = explode(';', $defaults['ADR;WORK']);
             }
             for ($i=0; $i<=6; $i++) {
                 if (!isset($values[$i])) $values[$i] = '';
             }
-            if (!empty($dataRow->street)) $values[2] = utf8_decode($dataRow->street);
-            if (!empty($dataRow->city)) $values[3] = utf8_decode($dataRow->city);
-            if (!empty($dataRow->country)) $values[4] = utf8_decode($dataRow->country);
-            if (!empty($dataRow->zip)) $values[5] = utf8_decode($dataRow->zip);
-            if (!empty($dataRow->country)) $values[6] = utf8_decode($dataRow->country);
+            if (!empty($dataRow->street)) $values[2] = $dataRow->street;
+            if (!empty($dataRow->city)) $values[3] = $dataRow->city;
+            if (!empty($dataRow->country)) $values[4] = $dataRow->country;
+            if (!empty($dataRow->zip)) $values[5] = $dataRow->zip;
+            if (!empty($dataRow->country)) $values[6] = $dataRow->country;
             $vcard->addAddress($values[0], $values[1], $values[2], $values[3], $values[4], $values[5], $values[6]);
             $vcard->addParam('TYPE', 'WORK');
-            $vcard->addParam('CHARSET', 'ISO-8859-1');
+            $vcard->addParam('CHARSET', $charset);
         }
 
         if ($imageData && $imageData->hasContent()) {
@@ -151,8 +152,9 @@ class Team_Kwc_Team_Member_Data_Vcard_ContentSender extends Kwf_Component_Abstra
 
             if ($type[1] == 'JPEG') {
                 $vcard->setPhoto(base64_encode($data['contents']));
+                if ($vcfCardVersion == '3.0') $vcard->addParam('ENCODING', 'b');
                 $vcard->addParam('TYPE', $type[1]);
-                $vcard->addParam('ENCODING', 'BASE64');
+                if ($vcfCardVersion == '2.1') $vcard->addParam('ENCODING', 'BASE64');
             }
         }
 

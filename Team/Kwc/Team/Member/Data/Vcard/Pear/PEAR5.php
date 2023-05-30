@@ -3,7 +3,7 @@
  * This is only meant for PHP 5 to get rid of certain strict warning
  * that doesn't get hidden since it's in the shutdown function
  */
-class Team_Kwc_Team_Member_Data_Vcard_Pear_PEAR5
+class PEAR5
 {
     /**
     * If you have a class that's mostly/entirely static, and you need static
